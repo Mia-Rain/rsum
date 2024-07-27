@@ -1,0 +1,8 @@
+[submodule "lib/ofile"]
+	path = lib/ofile
+	url = https://github.com/Mia-Rain/ofile.git
+	branch = switch
+[submodule "lib/shlibrandom"]
+	path = lib/shlibrandom
+	url = https://github.com/Mia-Rain/shlibrandom
+	branch = switch

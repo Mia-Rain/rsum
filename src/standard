@@ -1,0 +1,35 @@
+#!/bin/sh
+# standard mode
+# this mode forms seeds using a counter loop
+# this counter loop is given a max size using $max_t
+# this is either set to 40 by default or given by the user
+# this causes seeds to be the 3*($max_t/2) digits in length
+## 2 seeds are formed, 3 digits at a time, $max_t times
+### unless a seed becomes too long and begins to approach the size limit
+### which causes the forming to end
+# these 2 seeds are then given to shlibrandom
+# which preforms the xoroshiro64** version of the xorshift prng algorithm
+# using these 2 seeds
+# this produces a random number from said seeds
+## the above is done until no more data exists
+# additional numbers are appended together, eventually resulting in the "checksum"
+## larger sizes of $max_t result in smaller checksums
+#### note that different sizes will result in different checksums
+##### additionally if $max_t is >= ~11 the first ~12 digits will always be the same
+##### the smallest possible checksum of the given data is these 12 digits
+### the size of $max_t should be adjusted based on the size of the input file
+
+unset sum
+[ "$size" -gt 0 ] && max_t=$size
+while [ "$1" ]; do
+  form "$@" || return 1 # exit > 0 means a crash occurred
+  shift "$max_t"
+  seed="$seed1:$seed2"; unset seed1 seed2
+  printf '                                                                   \r'
+  printf 'Generating Random Number...\r'
+  sum="$sum$(printf '%s' $(random "$seed"))"
+  printf 'Generated Random Number...\r'
+done
+printf '                                                                   \r'
+printf '%s\n' "${sum}  ${file:--}"
+

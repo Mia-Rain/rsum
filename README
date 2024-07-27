@@ -1,0 +1,35 @@
+---
+rsum
+-- checksums in near pure shell
+---
+building
+-- run `sh ./standalone.sh conf=bindgen.conf > ./rsum.sh`
+---- for standalone usage
+-- run `sh ./bindgen.sh`
+---- to generate functions for 3rd party usage
+---
+usage
+-- ./rsum.sh [FILE] [MODE] [LOOP SIZE]
+---- FILE:
+------ file to generate checksum for
+------ use `-` if piping data
+---- MODE:
+------ gen mode to use
+---- LOOP SIZE
+------ sets the value of $max_t
+------ smaller numbers result in larger checksums
+------ for more info seed ./src/standard
+---
+Limitations
+-- due to the limitations of POSIX shell's integer size limit
+---- only 18446744073709551614 factorial possible states exist
+---- a file of large enough size could have more possible states
+---- thus it is likely that collisions will occur with large files
+------ additionally rsum operates on the entire file
+------ 40 characters per loop; this can lead to extremely long calculation times
+------ for large files
+---
+modes
+-- currently only a standard mode exists
+-- however I have plans for additional modes in the future
+---

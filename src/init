@@ -1,0 +1,7 @@
+#!/bin/sh
+unset seed1 seed2
+file="${1:--}"; mode="$2"; size="${3:-0}"
+set -- $(ofile "$file" OCTAL)
+case "${2:-standard}" in
+  *) standard "$@" #|| return 1;;
+esac

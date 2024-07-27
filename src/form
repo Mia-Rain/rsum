@@ -1,0 +1,39 @@
+#!/bin/sh
+# form should receive all octal data in "$@"
+[ "$progress" ] || progress=0
+[ "$total" ] || total="$#"
+[ "$max_t" ] || max_t=40
+[ "$#" -lt "$max_t" ] && max_t=$#
+# if the number of arguments is < $max_t
+# $0 (form) will run out of data and exit 1
+# idk why this is but doing this just quickly fixes it
+max_c=0; while [ "$1" -a "${#1}" -gt 0 ]; do
+  [ "${#seed1}" -eq 18 ] && return
+  seed1="${seed1}$1"
+  # [ "$seed1" -eq "$seed1" ] || return 1 # exit if seed isn't a number
+  # this was needed for debugging issues with od
+  shift 1
+  [ "$progress" ] && {
+    [ "$progress" ] && : $((progress+=1))
+    printf '                                                                   \r'
+    printf 'Forming Seeds... %s/%s | seeds: %s - %s\r' "$progress" "$total" "$seed1" "$seed2"
+  }
+  : $((max_c+=1))
+  [ "$2" ] && {
+    [ "${#seed2}" -eq 18 ] && return
+    seed2="${seed2}$1"
+    shift 1
+    [ "$progress" ] && {
+      [ "$progress" ] && : $((progress+=1))
+      printf '                                                                   \r'
+      # clean the line
+      # theres no good way to due this
+      # as not all shells support ASNI codes
+      ##
+      # if its not done the progress line becomes a mess very quickly
+      printf 'Forming Seeds... %s/%s | seeds: %s - %s\r' "$progress" "$total" "$seed1" "$seed2"
+    }
+    : $((max_c+=1))
+  }
+  [ "$max_c" -ge "$max_t" ] && return 0
+done
